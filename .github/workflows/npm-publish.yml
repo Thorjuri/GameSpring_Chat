@@ -1,13 +1,12 @@
 
-name: CI_CD_SSAM
-
+name: Gamespring_chat_CD
 on:
   pull_request:
     branches: ["master"]
 
 jobs:
   deploy:
-    name: CD_Gamespring
+    name: deploy_ubuntu
     runs-on: ubuntu-latest
 
     strategy:
