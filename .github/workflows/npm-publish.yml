@@ -1,0 +1,29 @@
+
+name: CI_CD_SSAM
+
+on:
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  deploy:
+    name: CD_Gamespring
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          key: ${{ secrets.CI_CD_KEY }}
+          host: ${{ secrets.CI_CD_HOST }}
+          username: ${{ secrets.CI_CD_USERNAME }}
+          port: ${{ secrets.CI_CD_PORT }}
+          script: |
+            cd ${{ secrets.CI_CD_PATH }}
+            sudo git pull origin master
+            sudo npm install
+            sudo pm2 restart app.js
