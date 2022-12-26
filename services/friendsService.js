@@ -1,4 +1,4 @@
-const FriendsRepository = require("../Repositories/friendsRepository");
+const FriendsRepository = require("../repositories/friendsRepository");
 
 class FriendsService {
     friendsRepository = new FriendsRepository();
