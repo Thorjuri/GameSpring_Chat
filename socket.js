@@ -52,44 +52,39 @@ function countRoom(roomName) {
 }
 
 io.on("connection", (socket) => {
-    console.log("---현재 접속자---", findUser())
-    const roomName = socket.id;
-    socket.join(roomName);
-    const rooms = findUser();
-    rooms.splice(rooms.indexOf(roomName), 1);
-    socket.emit("client_main", roomName);
-    socket.emit("admin_roomlist", rooms);
+    const userNum1 = countRoom("1")
+    const userNum2 = countRoom("2")
+    // console.log(userNum1, userNum2)
+    socket.emit("list", (userNum1, userNum2))
 
-    socket.on("admin_enter_room", (room) => {
-    console.log(room)
-    socket.join(room);
-    const roomName = room;
-    const nickname = "admin";
-    const message = "안녕하세요 고객님, 생활체육 매칭 서비스 SPOTS입니다. 무엇을 도와드릴까요?";
-    const data = { roomName, nickname, message };
-    io.sockets.in(roomName).emit("new_message", data);
-    });
+    socket.on("connection", (obj)=> {
+        const convert = JSON.parse(obj);
+        const { roomNum, nickname } = convert;
+        console.log("---------roomNumber---------",roomNum )
+        socket.join(roomNum)
+        const message = `${nickname}님이 ${roomNum}방에 입장하셨습니다.`
+        const userNum = countRoom(roomNum)
+        io.sockets.in(roomNum).emit("welcome", message, roomNum, userNum)
+        // console.log("---1---", roomNum )
+    })
 
-    socket.on("chatting", (obj) => {
-    const convert = JSON.parse(obj);
-    console.log(convert)
-    const { roomName, nickname, value } = convert;
-    const data = { roomName, nickname, message: value };
-    io.sockets.in(roomName).emit("new_message", data);
-    });
+    socket.on("chat", (obj)=> {
+        const convert = JSON.parse(obj);
+        const { roomNum , nickname, message } = convert;
+        io.sockets.in(roomNum).emit("contents", roomNum, nickname, message)
+        // console.log("---2---", roomNum , nickname, message )
+        // console.log("---현재 접속자---", findUser())
+    } )
 
-    socket.on("disconnecting", () => {
-    //disconnecting = 연결 종료 직전**
-    const nickname = socket.id.slice(0, 5);
-    console.log("---퇴장 후 잔여 접속자---", findUser())
+    socket.on("disconnecting", (nickname) => {
+    // console.log("---퇴장 후 잔여 접속자---", findUser())
     const message = `${nickname} 님이 퇴장하셨습니다.`;
-    const roomName = socket.id;
-    io.sockets.in(roomName).emit("left_notice", message); // 연결 종료 시(직전에) 해당 room 전체에 메세지
+    socket.emit("chat", message); 
     });
 
-    socket.on("disconnect", () => {
-    //disconnecting = 연결 종료 직후**
-    console.log(socket.rooms);
+    socket.on("disconnect", (nickname) => {
+    console.log("---퇴장 후 잔여 접속자---", findUser())
+
     });
 });
 };

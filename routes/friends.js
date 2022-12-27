@@ -5,8 +5,8 @@ const FriendsController = require("../controllers/friendsController");
 const friendsController = new FriendsController();
 const wrapAsyncController = require('../middlewares/wrapAsyncController');
 
-router.post('/', auth_middleware, wrapAsyncController(friendsController.createReq));
-router.get('/', auth_middleware, wrapAsyncController(friendsController.getNewReq));
+router.get('/', auth_middleware, wrapAsyncController(friendsController.getNewReq)); //받은 요청 조회
+router.post('/', auth_middleware, wrapAsyncController(friendsController.createReq)); //친구요청
 router.post('/add', auth_middleware, wrapAsyncController(friendsController.acceptReq));
 router.delete('/add', auth_middleware, wrapAsyncController(friendsController.rejectReq));
 router.get('/me', auth_middleware, wrapAsyncController(friendsController.getMyFriend));

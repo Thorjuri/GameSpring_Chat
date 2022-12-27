@@ -4,8 +4,10 @@ class FriendsController {
     friendsService = new FriendsService();
 
     createReq = async(req, res)=> {
-        const sender = res.locals.user.loginId;
         const { receiver } = req.body;
+        console.log("--------2----------",receiver)
+        const sender = res.locals.user.loginId;
+        console.log("--------1----------",sender)
         const data = await this.friendsService.createReq(sender, receiver);
         res.status(201).send(data);
     };
