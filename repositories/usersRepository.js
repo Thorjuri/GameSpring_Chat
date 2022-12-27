@@ -16,7 +16,7 @@ class UsersRepository {
 
     getAllUsers = async()=> {
         const user = await Users.findAll({
-            attributes: [`loginId`, 'createdAt']
+            attributes: [`loginId`, 'friends', 'createdAt']
         });
 
         // const userData = user.map(async(val)=> {

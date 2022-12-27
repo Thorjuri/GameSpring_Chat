@@ -29,6 +29,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    friends: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: {
+        list: []
+      },
+      }
+
 }, 
   {
     sequelize,

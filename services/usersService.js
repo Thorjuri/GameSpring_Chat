@@ -67,9 +67,17 @@ class UsersService {
         return { loginId: user.loginId, accessToken: `Bearer ${ accessToken }` };
     };
 
-    getAllUsers = async()=> {
+    // 친구 여부도 추가해서 보내야함(친구 아닐경우만 친구요청 버튼 노출)
+    getAllUsers = async(loginId)=> {
         const data = await this.usersRepository.getAllUsers();
-        return { message: `조회된 유저 ${data.length}명`, user: data };
+        const isFriend = data.map((val)=> {
+            if(val.friends.list.indexOf(loginId) === -1){
+                return { val, friend: false };
+            }else{
+                return { val, friedn: true };
+            };
+        });
+        return { message: `조회된 유저 ${data.length}명`, isFriend }; 
     };
 };
 

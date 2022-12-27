@@ -20,23 +20,23 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         type: DataTypes.INTEGER,
       },
-      loginId: {
+      sender: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      friend: {
+      receiver: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       confirm: {
         type: DataTypes.BOOLEAN,
         allowNull: true,
-        defaultValue: null
+        defaultValue: false
       },
       valid: {
         type: DataTypes.BOOLEAN,
         allowNull: true,
-        defaultValue: null
+        defaultValue: false
       },
   }, 
     {
