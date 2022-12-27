@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="./main"></script>
+
+    <script>
+
+            function getMyFriends(){
+            const authToken = window.localStorage.getItem("accessToken");
+            var ajax = $.ajax({
+                    url: "/api/friends/",
+                    type: 'GET',
+                    dataType: "JSON",
+                    beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Content-type","application/json");
+                    xhr.setRequestHeader("Authorization", authToken);
+                    },
+                    success: function (result) {
+                        const ul = document.querySelector("#friends");
+                        $("#friends").empty();
+                        result.data.map((val, idx)=>{
+                            if(val.confirm === false){
+                                const { sender, createdAt, confirm, valid} = val
+                                console.log( sender, createdAt, confirm, valid )
+                            
+                            const li = document.createElement("div");
+                            li.innerText = `신청인:${sender} / 신청일:${createdAt.slice(0,10)}`;
+                            const accept_btn = document.createElement('button');
+                            const reject_btn = document.createElement('button');
+                            const hr = document.createElement('hr');
+                            const accept_text = document.createTextNode('수락');
+                            const reject_text = document.createTextNode('거절');
+                            ul.appendChild(li);
+                            ul.appendChild(accept_btn);
+                            accept_btn.appendChild(accept_text);
+                            ul.appendChild(reject_btn);
+                            reject_btn.appendChild(reject_text);
+                            ul.appendChild(hr);
+                            }
+                        });
+                    },
+                    error: function(result){
+                        const isSigned = result.responseJSON.errorMessage
+                        alert(isSigned);
+                        if(isSigned === "로그인이 필요한 기능입니다."){
+                            location.href="/"
+                        }
+                    }
+                });
+            };
+        getMyFriends();
+
+        function logout(){
+            window.localStorage.removeItem("accesToken")
+            window.localStorage.removeItem("loginId")
+            window.localStorage.removeItem("user")
+            location.href="/"
+        }
+
+    </script>
+    </head>
+<body>
+    <div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" onclick="location.href='main'" role="tab" aria-controls="home" aria-selected="true">Rooms</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" onclick="location.href='main'" role="tab" aria-controls="profile" aria-selected="false">Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" onclick="location.href='friends'" role="tab" aria-controls="contact" aria-selected="false">Friends</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" onclick="logout()" role="tab" aria-controls="contact" aria-selected="false">Logout</a>
+            </li>  
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"></div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"></div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"></div>
+        </div>
+    </div>
+    <hr>
+    <div id="friends">
+
+    </div>
+</body>
+</html>

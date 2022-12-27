@@ -48,6 +48,11 @@ app.get('/main', (req, res)=> {
     res.render("main")
 })
 
+app.get('/friends', (req, res)=> {
+    res.render("friends")
+})
+
+
 
 
 
