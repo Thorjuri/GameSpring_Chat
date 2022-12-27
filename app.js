@@ -28,10 +28,35 @@ app.use("/api", Router);
 
 app.use(errorHandlerMiddleware);
 
-app.get("/", (req, res) => {
-    res.send("SPOTS 서버 상태 양호😏😏");
-});
 
+// app.set('view engine', "pug");
+// app.set("views", "./src/views");
+// app.use('/public',express.static("./src/public"));
+
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
+app.get("/", (req, res) => {
+    res.render("login")
+}); 
+
+app.get('/signup', (req, res)=> {
+    res.render("signup")
+})
+
+app.get('/main', (req, res)=> {
+    res.render("main")
+})
+
+app.get('/friends', (req, res)=> {
+    res.render("friends")
+})
+
+
+
+
+
+ 
 socket(http);
 
 http.listen(port, () => {
