@@ -1,0 +1,54 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+     function signup(){
+          var param = {};
+          param.loginId = $("#userid").val();
+          param.password = $("#password").val();
+          var ajax = $.ajax({
+                    url: "/api/users/signup",
+                    data: param,
+                    type: 'POST',
+                    dataType: "JSON",
+                    success: function (result) {
+                         alert(result.message);
+                         location.href = "/";
+                    },
+                    error: function(result){
+                         alert(result.responseJSON.error)
+                         console.log(result.responseJSON.error)
+                    }
+               });
+     }
+
+     function checkDup(){
+          var param = {};
+          param.loginId = $("#userid").val();
+          var ajax = $.ajax({
+                    url: "/api/users/checkId",
+                    data: param,
+                    type: 'POST',
+                    dataType: "JSON",
+                    success: function (result) {
+                         alert(result.message);
+                    }
+               });
+
+     }
+</script>
+
+<div style="width:420px;">
+     <div id="login" style="text-align:right;"><a href="chat">로그인 하기</div>
+     <hr>
+     <div  id="loginout" style="display:none;">  
+          <span id="loginid"></span> <a href="/logout">로그아웃</a>
+     </div>
+     <div>
+          <div>
+               <div >아이디  : <input type="text" id="userid" name="userid" style="width:50%;"> </div>
+               <div>패스워드  : <input type="password" id="password"  name="password" style="width:50%;"> </div>
+          </div>
+          <div></div>
+     </div>
+     <div  style="margin-top:8px;text-align:right;"> <input type="button" value="중복확인" onclick="checkDup();" /></div>
+     <div  style="margin-top:8px;text-align:right;"> <input type="button" value="회원가입" onclick="signup();" /></div>
+</div>

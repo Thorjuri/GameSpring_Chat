@@ -19,6 +19,7 @@ class UsersController {
         const { loginId, password } = req.body;
         const data = await this.usersService.login(loginId, password);
         res.status(200).send(data);
+        // res.redirect('/chat')
     };
 
     getAllUsers = async(req, res)=> {
