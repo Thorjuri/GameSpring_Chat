@@ -67,7 +67,7 @@ class UsersService {
 
     getAllUsers = async(loginId)=> {
         const data = await this.usersRepository.getAllUsers(loginId);
-        const isFriend = data.map((val)=> {
+        const isFriend = await data.map((val)=> {
             val.list = val.friends.list;
             delete val.friends;
             if(val.list.indexOf(loginId) === -1){
