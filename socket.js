@@ -60,6 +60,7 @@ module.exports = (http) => {
         socket.on("enterRoom", (obj)=> {
             const convert = JSON.parse(obj);
             const { roomNum, nickname } = convert;
+            console.log("---------enterRoom---------", roomNum)
             socket.join(roomNum);
             const message = `${nickname}님이 ${roomNum}방에 입장하셨습니다.`;
             const userNum = countRoom(roomNum);
@@ -70,15 +71,12 @@ module.exports = (http) => {
             const convert = JSON.parse(obj);
             const { roomNum , nickname, message } = convert;
             io.sockets.in(roomNum).emit("contents", roomNum, nickname, message);
+
         });
 
-        socket.on("disconnecting", (nickname) => {
-            const message = `${nickname} 님이 퇴장하셨습니다.`;
-            socket.emit("chat", message); 
-        });
-
-        socket.on("disconnect", (nickname) => {
-            console.log("---퇴장 후 잔여 접속자---", findUser());
+        socket.on('disconnect', ()=> {
+            const message = `상대방이 퇴장했습니다`;
+            socket.broadcast.emit('leaveUser', message);
         });
     });
 };
