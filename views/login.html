@@ -9,15 +9,19 @@
                     data: param,
                     type: 'POST',
                     dataType: "JSON",
-                    success: function (result) {
+                    success: function(result){
                         console.log(result);
-                        window.localStorage.setItem("loginId", result.loginId)
-                        window.localStorage.setItem("accessToken", result.accessToken)
-                        window.localStorage.setItem("user", result)
+                        window.localStorage.setItem("loginId", result.loginId);
+                        window.localStorage.setItem("accessToken", result.accessToken);
+                        window.localStorage.setItem("user", result);
                         location.href = "/main";
-                    }
+                    },
+                    error: function(result){
+                    console.log(result);
+                    alert(result.responseJSON.error);
+                }
             });
-    }
+        };
 </script>
 
 <div style="width:420px;">

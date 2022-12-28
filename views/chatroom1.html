@@ -62,17 +62,16 @@
         function moveRooms(){
             let loginId = window.localStorage.getItem("loginId");
             socket.disconnect();
-            location.href='main'
+            location.href='main';
         };
 
 
         function logout(){
-            window.localStorage.removeItem("accesToken")
-            window.localStorage.removeItem("loginId")
-            window.localStorage.removeItem("user")
+            window.localStorage.removeItem("accesToken");
+            window.localStorage.removeItem("loginId");
+            window.localStorage.removeItem("user");
             location.href="/"
         };
-
     </script>
     </head>
 <body>
