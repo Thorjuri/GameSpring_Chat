@@ -42,7 +42,12 @@ app.get('/main', (req, res)=> {
 app.get('/friends', (req, res)=> {
     res.render("friends");
 });
-
+app.get('/chatroom1', (req, res)=> {
+    res.render("chatroom1");
+});
+app.get('/chatroom2', (req, res)=> {
+    res.render("chatroom2");
+});
 
 socket(http);
 

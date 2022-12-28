@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script>
         const socket =  io.connect('http://localhost:3000/', { path: '/socket.io' });
+        socket.disconnect();
+
         socket.on("list", (userNum1, userNum2)=>{
             $('#userNum1').text(userNum1);
             $('#userNum2').text(userNum2);
@@ -22,7 +24,7 @@
             $("#roomlist").show();
             $("#users").hide();
             const nickname = window.localStorage.getItem("loginId")
-            $("#roomId").text().empty()
+            // $("#roomId").text().empty()
             socket.disconnect(nickname);
         };
         
@@ -106,42 +108,42 @@
     };
     </script>
     <script>
-        function enter_room(roomNum){
-            $("#chat").show();
-            $("#room1").hide();
-            $("#room2").hide();
-            $('#roomlist').hide();
-            let nickname = window.localStorage.getItem("loginId");
-            let obj = { roomNum, nickname };
-            socket.emit("enterRoom", JSON.stringify(obj));
-            socket.on("welcome", (message, roomNum, userNum)=> {
-                $("#roomId").text(`방번호: ${roomNum}`);
-                $("#userCount").text(`참여인원: ${userNum}`);
-                let msgDiv = document.getElementById("chat");
-                let ul = msgDiv.querySelector("ul");
-                let li = document.createElement("li");
-                li.innerText = message;
-                ul.append(li);
-            });
-        };
+        // function enter_room(roomNum){
+        //     $("#chat").show();
+        //     $("#room1").hide();
+        //     $("#room2").hide();
+        //     $('#roomlist').hide();
+        //     let nickname = window.localStorage.getItem("loginId");
+        //     let obj = { roomNum, nickname };
+        //     socket.emit("enterRoom", JSON.stringify(obj));
+        //     socket.on("welcome", (message, roomNum, userNum)=> {
+        //         $("#roomId").text(`방번호: ${roomNum}`);
+        //         $("#userCount").text(`참여인원: ${userNum}`);
+        //         let msgDiv = document.getElementById("chat");
+        //         let ul = msgDiv.querySelector("ul");
+        //         let li = document.createElement("li");
+        //         li.innerText = message;
+        //         ul.append(li);
+        //     });
+        // };
 
-        function sendMessage(){
-            let message = $("#msg").val();
-            let room = $("#roomId").text();
-            let roomNum = room.slice(-1);
-            let nickname = window.localStorage.getItem("loginId");
-            let obj = { roomNum, nickname, message };
-            console.log("--------------8--------", roomNum)
-            socket.emit("chat", JSON.stringify(obj));
-            socket.on("contents", (roomNum, nickname, message)=>{
-                let msgDiv = document.getElementById("chat");
-                let ul = msgDiv.querySelector("ul");
-                let li = document.createElement("li");
-                li.innerText = `${nickname}:  ${message}`;
-                ul.appendChild(li);
-                document.getElementById("msg").value = "";
-            });
-        };
+        // function sendMessage(){
+        //     let message = $("#msg").val();
+        //     let room = $("#roomId").text();
+        //     let roomNum = room.slice(-1);
+        //     let nickname = window.localStorage.getItem("loginId");
+        //     let obj = { roomNum, nickname, message };
+        //     console.log("--------------8--------", roomNum)
+        //     socket.emit("chat", JSON.stringify(obj));
+        //     socket.on("contents", (roomNum, nickname, message)=>{
+        //         let msgDiv = document.getElementById("chat");
+        //         let ul = msgDiv.querySelector("ul");
+        //         let li = document.createElement("li");
+        //         li.innerText = `${nickname}:  ${message}`;
+        //         ul.appendChild(li);
+        //         document.getElementById("msg").value = "";
+        //     });
+        // };
 
         function logout(){
             window.localStorage.removeItem("accesToken");
@@ -185,17 +187,18 @@
                 <h4>room1</h4>
                 <!-- <span id="roomNum">1</span> -->
                 <span id="UserNum1" class="badge badge-primary badge-pill">1</span>
-                <button onclick="enter_room('1')">입장</button>
+                <!-- <button onclick="enter_room('1')">입장</button> -->
+                <button onclick="location.href='chatroom1'">입장</button>
             </li>
             <li  id="room2" class="list-group-item d-flex justify-content-between align-items-center">
                 <h4>room2</h4>
                 <!-- <span id="roomNum">2</span> -->
                 <span id="UserNum2" class="badge badge-primary badge-pill">2</span>
-                <button onclick="enter_room('2')">입장</button>
+                <button onclick="location.href='chatroom2'">입장</button>
             </li>
         </ul>
     </div>
-    <div id="chat">
+    <!-- <div id="chat">
         <h5 id="roomId"></h5>
             <p></p>
         <h5 id="userCount"></h5>
@@ -203,7 +206,7 @@
         </ul>
         <input id="msg" placeholder="메세지를 입력하세요", required, type="text">
         <button onclick="sendMessage()" id="sendMsg"> send </button>
-    </div>
+    </div> -->
     
     <hr>
     <div id="users">
