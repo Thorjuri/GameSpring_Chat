@@ -77,8 +77,13 @@ class FriendsService {
     };
 
     getMyFriend = async(loginId)=> {
-        const data = await this.friendsRepository.getMyFriend(loginId);
-        return { message: `조회된 나의 친구 ${ data.friends.list.length }명`, data };
+        const friend = await this.friendsRepository.getMyFriend(loginId);
+        const result  = await Promise.all(friend.friends.list.map(async(val)=> {
+            const user = await this.friendsRepository.checkUser(val);
+            const createdAt = user.createdAt;
+            return { Id: val, createdAt };
+        }));
+        return { message: `조회된 나의 친구 ${ friend.friends.list.length }명`, result };
     };
 
     dropFriend = async(loginId, friendId)=> {
