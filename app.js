@@ -52,5 +52,5 @@ app.get('/chatroom2', (req, res)=> {
 socket(http);
 
 http.listen(port, () => {
-    console.log(`${port}번 포트로 서버 실행`);
+    console.log(`${port}번 포트로 서버 실행합니다`);
 });

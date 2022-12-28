@@ -11,7 +11,7 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
-        const socket =  io.connect('http://localhost:3000/', { path: '/socket.io' });
+        const socket =  io.connect('https://developerjuri.shop/', { path: '/socket.io' });
 
         function enter_room(roomNum){
             $("#chat").show();
@@ -22,8 +22,8 @@
             let obj = { roomNum, nickname };
             socket.emit("enterRoom", JSON.stringify(obj));
             socket.on("welcome", (message, roomNum, userNum)=> {
-                $("#roomId").text(`방번호: ${roomNum}`);
-                $("#userCount").text(`참여인원: ${userNum}`);
+                $("#roomId").text(`Room: ${roomNum}`);
+                $("#userCount").text(`Users: ${userNum}`);
                 let msgDiv = document.getElementById("chat");
                 let ul = msgDiv.querySelector("ul");
                 let li = document.createElement("li");
@@ -95,16 +95,16 @@
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"></div>
         </div>
     </div>
-    <hr>
-    <div id="chat">
-        <h5 id="roomId"></h5>
-            <p></p>
-        <h5 id="userCount"></h5>
-        <ul id="msglist">
-        </ul>
-        <input id="msg" placeholder="메세지를 입력하세요", required, type="text">
-        <button onclick="sendMessage()" id="sendMsg"> send </button>
+    <h5 id="roomId"></h5>
+    <h5 id="userCount"></h5>
+    <div id="chat" style="width:420px; height:200px;  border: solid gray 0.5px;  margin:50px auto 0px auto;">
+        <ul id="msglist"></ul>
     </div>
-
+    <div class="input-group mb-3" style="width:420px; margin: auto;">
+        <input id="msg" required type="text" class="form-control" placeholder="Message" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <button type="button" onclick="sendMessage()" id="sendMsg" class="btn btn-outline-success">send</button>
+        </div>
+    </div>
 </body>
 </html>
