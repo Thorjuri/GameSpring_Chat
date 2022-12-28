@@ -12,9 +12,9 @@
     <script>
         const socket =  io.connect('http://localhost:3000/', { path: '/socket.io' });
         socket.on("list", (userNum1, userNum2)=>{
-            $('#userNum1').text(userNum1)
-            $('#userNum2').text(userNum2)
-            console.log(userNum1, userNum2)
+            $('#userNum1').text(userNum1);
+            $('#userNum2').text(userNum2);
+            console.log(userNum1, userNum2);
         });
 
         function showRooms(){
@@ -22,12 +22,13 @@
             $("#roomlist").show();
             $("#users").hide();
             const nickname = window.localStorage.getItem("loginId")
-            socket.disconnect(nickname)
+            $("#roomId").text().empty()
+            socket.disconnect(nickname);
         };
         
         let hidden = 0
         function showUsers(){
-            $("#users").show()
+            $("#users").show();
             $("#roomlist").hide();
             $("#chat").hide();
             function getUsers(){
@@ -37,54 +38,52 @@
                     type: 'GET',
                     dataType: "JSON",
                     beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Content-type","application/json");
-                    xhr.setRequestHeader("Authorization", authToken);
+                        xhr.setRequestHeader("Content-type","application/json");
+                        xhr.setRequestHeader("Authorization", authToken);
                     },
                     success: function (result) {
+                        alert(result.message);
                         const ul = document.querySelector("#users");
                         $("#users").empty();
                         result.isFriend.map((val, idx)=>{
-                            console.log(val.val);
-                            alert(result.message);
                             const li = document.createElement("div");
-                            const loginId = val.val.loginId;
-                            const createdAt = val.val.createdAt.slice(0,10);
-                            const friends = val.val.friends.list.length;
+                            const loginId = val.loginId;
+                            const createdAt = val.createdAt.slice(0,10);
+                            const friends = val.list.length;
+                            const { isFriend } = val;
                             li.innerText = `User:${loginId} / 가입일:${createdAt} / 친구 수:${friends}`;
-                            const btn = document.createElement('button');
                             const hr = document.createElement('hr');
-                            btn.setAttribute("id", loginId);
-                            console.log("----------", $(btn).attr('id') );
-                            btn.setAttribute("onclick", set(loginId));
-                            let text = document.createTextNode('친구요청');
                             ul.appendChild(li);
-                            ul.appendChild(btn);
-                            btn.appendChild(text);
+                            if( isFriend === false ){
+                                const btn = document.createElement('button');
+                                btn.setAttribute("id", loginId);
+                                btn.setAttribute("class", "reqBtn");
+                                let text = document.createTextNode('친구요청');
+                                ul.appendChild(btn);
+                                btn.appendChild(text);
+                            };
                             ul.appendChild(hr);
                         });
+                        const cols = document.querySelectorAll(".reqBtn");
+                        for (let i = 0; i < cols.length; i++) {
+                            let loginId = $(cols[i]).attr('id');
+                            cols[i].addEventListener("click", sendReq);
+                        };
                     },
                     error: function(result){
                         const isSigned = result.responseJSON.errorMessage
                         alert(isSigned);
                         if(isSigned === "로그인이 필요한 기능입니다."){
                             location.href="/"
-                        }
+                        };
                     }
                 });
             };
         getUsers();
 
-        function set(loginId){
-            // $(`#${loginId}`).setAttribute("onclick", sendReq(loginId))
-            let result = $(`#${loginId}`).attr("id");
-            // return btn.addEventListener("click", sendReq(loginId))
-            return sendReq(result);
-        };
-
-        function sendReq(loginId){
-            // let loginId = $(btn).attr('id')
-            console.log(loginId);
-            const authToken = window.localStorage.getItem("accesToken");
+        function sendReq(){
+            let loginId = $(this).attr('id');
+            const authToken = window.localStorage.getItem("accessToken");
             var param = {};
             param.receiver = loginId;
             var ajax = $.ajax({
@@ -93,74 +92,63 @@
                 data: param,
                 dataType: "JSON",
                 beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", authToken);
+                    xhr.setRequestHeader("Authorization", authToken);
                 },
                 success: function (result) {
                     console.log(result);
                 },
                 error: function(result){
                     console.log(result);
+                    alert(result.responseJSON.error);
                 }
             });
         };
     };
     </script>
     <script>
-        
-
         function enter_room(roomNum){
-            $("#chat").show()
-            $("#room1").hide()
-            $("#room2").hide()
-            $('#roomlist').hide()
-            const nickname = window.localStorage.getItem("loginId")
-            const obj = { roomNum, nickname }
-            socket.emit("connection", JSON.stringify(obj));
+            $("#chat").show();
+            $("#room1").hide();
+            $("#room2").hide();
+            $('#roomlist').hide();
+            let nickname = window.localStorage.getItem("loginId");
+            let obj = { roomNum, nickname };
+            socket.emit("enterRoom", JSON.stringify(obj));
             socket.on("welcome", (message, roomNum, userNum)=> {
-                console.log(roomNum)
-                // $("#roomId").append(roomNum)
-                $("#roomId").text(`방번호: ${roomNum}`)
-                // document.querySelector('h4').append(`참여인원: ${userNum}`)
-                $("#userCount").text(`참여인원: ${userNum}`)
-                const msgDiv = document.getElementById("chat")
-                const ul = msgDiv.querySelector("ul")
-                const li = document.createElement("li")
-                li.innerText = message
-                ul.append(li)
-                // ul.appendChild(li);
+                $("#roomId").text(`방번호: ${roomNum}`);
+                $("#userCount").text(`참여인원: ${userNum}`);
+                let msgDiv = document.getElementById("chat");
+                let ul = msgDiv.querySelector("ul");
+                let li = document.createElement("li");
+                li.innerText = message;
+                ul.append(li);
             });
         };
 
         function sendMessage(){
-            let message = $("#msg").val()
-            const room = $("#roomId").text()
-            const roomNum = room.slice(-1)
-            console.log("----------rnonnonon------------",roomNum )
-            const nickname = window.localStorage.getItem("loginId")
-            console.log("----1-----", roomNum)
-            console.log("----2-----", nickname)
-            const obj = { roomNum, nickname, message }
-            console.log("----3-----", obj)
-            socket.emit("chat", JSON.stringify(obj))
+            let message = $("#msg").val();
+            let room = $("#roomId").text();
+            let roomNum = room.slice(-1);
+            let nickname = window.localStorage.getItem("loginId");
+            let obj = { roomNum, nickname, message };
+            console.log("--------------8--------", roomNum)
+            socket.emit("chat", JSON.stringify(obj));
             socket.on("contents", (roomNum, nickname, message)=>{
-                console.log("----4-----", roomNum, nickname, message)
-                const msgDiv = document.getElementById("chat")
-                const ul = msgDiv.querySelector("ul")
-                // const ul = $('#msglist')
-                const li = document.createElement("li")
-                li.innerText = `${nickname}:  ${message}`
+                let msgDiv = document.getElementById("chat");
+                let ul = msgDiv.querySelector("ul");
+                let li = document.createElement("li");
+                li.innerText = `${nickname}:  ${message}`;
                 ul.appendChild(li);
-                document.getElementById("msg").value = ""
-                // $('#msglist').append(li);
+                document.getElementById("msg").value = "";
             });
         };
 
         function logout(){
-            window.localStorage.removeItem("accesToken")
-            window.localStorage.removeItem("loginId")
-            window.localStorage.removeItem("user")
-            location.href="/"
-        }
+            window.localStorage.removeItem("accesToken");
+            window.localStorage.removeItem("loginId");
+            window.localStorage.removeItem("user");
+            location.href="/";
+        };
 
     </script>
     <style>
@@ -188,18 +176,8 @@
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"></div>
         </div>
     </div>
+
     <hr>
-    
-        <!-- <div id="room1" class style="background-color: gainsboro; width:420px; border-color: black; border-radius: 5px;">
-            user<h6 id="UserNum1"> </h6>
-            room<h6 id="roomNum">1</h6>
-            <button onclick="enter_room('1')">입장</button>
-        </div>
-        <div id="room2" class style="background-color: gainsboro; width:420px; border-color: black; border-radius: 5px;">
-            user: <h6 id="UserNum2"></h6>
-            room<h6 id="roomNum">2</h6>
-            <button onclick="enter_room('2')">입장</button>
-        </div> -->
 
     <div id="roomlist">
         <ul class="list-group">
@@ -217,21 +195,18 @@
             </li>
         </ul>
     </div>
-
-
-        <div id="chat">
-            <h5 id="roomId"></h5>
-                <p></p>
-            <h5 id="userCount"></h5>
-            <ul id="msglist">
-            </ul>
-                <input id="msg" placeholder="메세지를 입력하세요", required="true", type="text">
-                <button onclick="sendMessage()" id="sendMsg"> send </button>
-        </div>
-        <hr>
-        <div id="users">
-
-        </div>
+    <div id="chat">
+        <h5 id="roomId"></h5>
+            <p></p>
+        <h5 id="userCount"></h5>
+        <ul id="msglist">
+        </ul>
+        <input id="msg" placeholder="메세지를 입력하세요", required, type="text">
+        <button onclick="sendMessage()" id="sendMsg"> send </button>
     </div>
+    
+    <hr>
+    <div id="users">
+    </div>  
 </body>
 </html>
