@@ -23,44 +23,29 @@ app.use(
 );
 
 app.options("*", cors());
-
 app.use("/api", Router);
-
 app.use(errorHandlerMiddleware);
 
-
-// app.set('view engine', "pug");
-// app.set("views", "./src/views");
-// app.use('/public',express.static("./src/public"));
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 app.get("/", (req, res) => {
-    res.render("login")
+    res.render("login");
 }); 
-
 app.get('/signup', (req, res)=> {
-    res.render("signup")
-})
-
+    res.render("signup");
+});
 app.get('/main', (req, res)=> {
-    res.render("main")
-})
-
+    res.render("main");
+});
 app.get('/friends', (req, res)=> {
-    res.render("friends")
-})
+    res.render("friends");
+});
 
 
-
-
-
- 
 socket(http);
 
 http.listen(port, () => {
     console.log(`${port}번 포트로 서버 실행`);
 });
-
-module.exports = http;
