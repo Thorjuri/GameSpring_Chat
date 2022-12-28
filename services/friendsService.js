@@ -7,7 +7,7 @@ class FriendsService {
     createReq = async(sender, receiver)=> {
         const checkUser = await this.friendsRepository.checkUser(receiver);
         const checkReq = await this.friendsRepository.checkReq(sender, receiver);
-        if(checkReq){
+        if(checkReq.length >0 ){
             this.err.status = 401;
             this.err.message = '이미 신청내역이 있습니다.';
             throw this.err;
