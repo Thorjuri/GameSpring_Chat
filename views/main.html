@@ -24,8 +24,7 @@
             $("#roomlist").show();
             $("#users").hide();
             const nickname = window.localStorage.getItem("loginId")
-            // $("#roomId").text().empty()
-            socket.disconnect(nickname);
+            socket.disconnect();
         };
         
         let hidden = 0
@@ -45,6 +44,7 @@
                     },
                     success: function (result) {
                         alert(result.message);
+                        console.log(result)
                         const ul = document.querySelector("#users");
                         $("#users").empty();
                         result.isFriend.map((val, idx)=>{
@@ -56,7 +56,7 @@
                             li.innerText = `User:${loginId} / 가입일:${createdAt} / 친구 수:${friends}`;
                             const hr = document.createElement('hr');
                             ul.appendChild(li);
-                            if( isFriend === false ){
+                            if(val.isFriend === false ){
                                 const btn = document.createElement('button');
                                 btn.setAttribute("id", loginId);
                                 btn.setAttribute("class", "reqBtn");
@@ -68,7 +68,6 @@
                         });
                         const cols = document.querySelectorAll(".reqBtn");
                         for (let i = 0; i < cols.length; i++) {
-                            let loginId = $(cols[i]).attr('id');
                             cols[i].addEventListener("click", sendReq);
                         };
                     },
@@ -98,6 +97,8 @@
                 },
                 success: function (result) {
                     console.log(result);
+                    alert('친구 요청이 완료되었습니다.')
+                    $(`#${loginId}`).remove();
                 },
                 error: function(result){
                     console.log(result);
@@ -106,52 +107,12 @@
             });
         };
     };
-    </script>
-    <script>
-        // function enter_room(roomNum){
-        //     $("#chat").show();
-        //     $("#room1").hide();
-        //     $("#room2").hide();
-        //     $('#roomlist').hide();
-        //     let nickname = window.localStorage.getItem("loginId");
-        //     let obj = { roomNum, nickname };
-        //     socket.emit("enterRoom", JSON.stringify(obj));
-        //     socket.on("welcome", (message, roomNum, userNum)=> {
-        //         $("#roomId").text(`방번호: ${roomNum}`);
-        //         $("#userCount").text(`참여인원: ${userNum}`);
-        //         let msgDiv = document.getElementById("chat");
-        //         let ul = msgDiv.querySelector("ul");
-        //         let li = document.createElement("li");
-        //         li.innerText = message;
-        //         ul.append(li);
-        //     });
-        // };
-
-        // function sendMessage(){
-        //     let message = $("#msg").val();
-        //     let room = $("#roomId").text();
-        //     let roomNum = room.slice(-1);
-        //     let nickname = window.localStorage.getItem("loginId");
-        //     let obj = { roomNum, nickname, message };
-        //     console.log("--------------8--------", roomNum)
-        //     socket.emit("chat", JSON.stringify(obj));
-        //     socket.on("contents", (roomNum, nickname, message)=>{
-        //         let msgDiv = document.getElementById("chat");
-        //         let ul = msgDiv.querySelector("ul");
-        //         let li = document.createElement("li");
-        //         li.innerText = `${nickname}:  ${message}`;
-        //         ul.appendChild(li);
-        //         document.getElementById("msg").value = "";
-        //     });
-        // };
-
         function logout(){
             window.localStorage.removeItem("accesToken");
             window.localStorage.removeItem("loginId");
             window.localStorage.removeItem("user");
             location.href="/";
         };
-
     </script>
     <style>
     </style>

@@ -39,10 +39,8 @@
             let roomNum = room.slice(-1);
             let nickname = window.localStorage.getItem("loginId");
             let obj = { roomNum, nickname, message };
-            console.log("--------------8--------", roomNum)
             socket.emit("chat", JSON.stringify(obj));
             socket.on("contents", (roomNum, nickname, message)=>{
-                console.log("-----------여기는 2번방-------", roomNum, nickname, message)
                 let msgDiv = document.getElementById("chat");
                 let ul = msgDiv.querySelector("ul");
                 let li = document.createElement("li");
@@ -63,17 +61,16 @@
         function moveRooms(){
             let loginId = window.localStorage.getItem("loginId");
             socket.disconnect();
-            location.href='main'
+            location.href='main';
         };
 
 
         function logout(){
-            window.localStorage.removeItem("accesToken")
-            window.localStorage.removeItem("loginId")
-            window.localStorage.removeItem("user")
+            window.localStorage.removeItem("accesToken");
+            window.localStorage.removeItem("loginId");
+            window.localStorage.removeItem("user");
             location.href="/"
         };
-
     </script>
     </head>
 <body>
