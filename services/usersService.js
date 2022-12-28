@@ -1,5 +1,5 @@
 const UsersRepository = require("../repositories/usersRepository");
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -52,7 +52,6 @@ class UsersService {
             this.err.message = '아이디 또는 패스워드를 확인해주세요';
             throw this.err;
         };
-
         const checkPass = await bcrypt.compare(password, user.password);
         if(!checkPass){
             this.err.status = 400;
@@ -63,21 +62,23 @@ class UsersService {
             {
                 expiresIn: '1d'
             });
-
         return { loginId: user.loginId, accessToken: `Bearer ${ accessToken }` };
     };
 
-    // 친구 여부도 추가해서 보내야함(친구 아닐경우만 친구요청 버튼 노출)
     getAllUsers = async(loginId)=> {
-        const data = await this.usersRepository.getAllUsers();
+        const data = await this.usersRepository.getAllUsers(loginId);
         const isFriend = data.map((val)=> {
-            if(val.friends.list.indexOf(loginId) === -1){
-                return { val, friend: false };
+            val.list = val.friends.list;
+            delete val.friends;
+            if(val.list.indexOf(loginId) === -1){
+                val.isFriend = false;
+                return val;
             }else{
-                return { val, friedn: true };
+                val.isFriend = true;
+                return val;
             };
         });
-        return { message: `조회된 유저 ${data.length}명`, isFriend }; 
+        return { message: `조회된 유저 ${ data.length }명`, isFriend }; 
     };
 };
 

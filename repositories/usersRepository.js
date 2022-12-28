@@ -1,4 +1,5 @@
 const { Users, Friends } = require('../models');
+const { Op } = require("sequelize");
 require("dotenv").config();
 
 class UsersRepository {
@@ -6,7 +7,7 @@ class UsersRepository {
 
     signup = async(loginId, password)=> {
         const data = await Users.create({ loginId, password });
-        return { message: `${loginId}님 회원가입을 축하드립니다.`};
+        return { message: `${ loginId }님 회원가입을 축하드립니다.`};
     };  
 
     checkId = async(loginId)=> {
@@ -14,21 +15,14 @@ class UsersRepository {
         return data;
     };
 
-    getAllUsers = async()=> {
+    getAllUsers = async(loginId)=> {
         const user = await Users.findAll({
-            attributes: [`loginId`, 'friends', 'createdAt']
+            raw: true,
+            attributes: [`loginId`, 'friends', 'createdAt'],
+            where: { 
+                [Op.not]: [{ loginId: loginId }]
+            }
         });
-
-        // const userData = user.map(async(val)=> {
-        //     const friend = await Friends.findAll({ 
-        //         where: { 
-        //             loginId: val.loginId,
-        //             confirm: true,
-        //             valid: true
-        //         }});
-        //     return { loginId: val.loginId, friends: friend.length }
-        // });
-
         return user;
     };
 

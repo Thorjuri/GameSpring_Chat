@@ -1,8 +1,6 @@
-const wrapAsyncController = (fn) => {
+const wrapAsyncController = (fn) => {  //예외처리 여부 관계없이 모든 error wrapping, 일관 반환
     return (req, res, next) => {
-        // Controller 실행 후 Error 발생 시 next로 errorHandler로 보낸다.
-        fn(req, res, next).catch(next)
-    }
-}
-
+        fn(req, res, next).catch(next);
+    };
+};
 module.exports = wrapAsyncController;

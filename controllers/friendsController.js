@@ -5,9 +5,7 @@ class FriendsController {
 
     createReq = async(req, res)=> {
         const { receiver } = req.body;
-        console.log("--------2----------",receiver)
         const sender = res.locals.user.loginId;
-        console.log("--------1----------",sender)
         const data = await this.friendsService.createReq(sender, receiver);
         res.status(201).send(data);
     };
@@ -20,13 +18,15 @@ class FriendsController {
 
     acceptReq = async(req, res)=> {
         const { friendsId } = req.body;
-        const data = await this.friendsService.acceptReq(friendsId);
+        const { loginId } = res.locals.user;
+        const data = await this.friendsService.acceptReq(friendsId, loginId);
         res.status(201).send(data);
     };
 
     rejectReq = async(req, res)=> {
         const { friendsId } = req.body;
-        const data = await this.friendsService.rejectReq(friendsId);
+        const { loginId } = res.locals.user;
+        const data = await this.friendsService.rejectReq(friendsId, loginId);
         res.status(201).send(data);
     };
 
