@@ -45,6 +45,7 @@
                         $("#users").empty();
                         result.isFriend.map((val, idx)=>{
                             console.log(val.val);
+                            alert(result.message);
                             const li = document.createElement("div");
                             const loginId = val.val.loginId;
                             const createdAt = val.val.createdAt.slice(0,10);
