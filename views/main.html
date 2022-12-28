@@ -9,6 +9,7 @@
     <script type="text/javascript"></script>
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <script>
         const socket =  io.connect('https://developerjuri.shop/', { path: '/socket.io' });
         socket.disconnect();
@@ -44,32 +45,33 @@
                     },
                     success: function (result) {
                         alert(result.message);
-                        console.log(result)
                         const ul = document.querySelector("#users");
                         $("#users").empty();
                         result.isFriend.map((val, idx)=>{
                             const li = document.createElement("div");
+                            li.setAttribute("style", "background-color:#EBFBFF;  border: solid white 0.5px; border-radius: 5px; padding-left:50px; padding-top: 7px; width:600px; height:50px");
                             const loginId = val.loginId;
                             const createdAt = val.createdAt.slice(0,10);
                             const friends = val.list.length;
                             const { isFriend } = val;
-                            li.innerText = `User:${loginId} / 가입일:${createdAt} / 친구 수:${friends}`;
-                            const hr = document.createElement('hr');
+                            li.innerText = `✅ User: ${loginId} / 가입일: ${createdAt} / 친구: ${friends}명`;
+                            const br = document.createElement('br');
                             ul.appendChild(li);
                             if(val.isFriend === false ){
                                 const btn = document.createElement('button');
                                 btn.setAttribute("id", loginId);
-                                btn.setAttribute("class", "reqBtn");
+                                btn.setAttribute("class", "reqBtn btn btn-info");
+                                btn.setAttribute("style", "margin-left:5%; ");
                                 let text = document.createTextNode('친구요청');
-                                ul.appendChild(btn);
+                                li.appendChild(btn);
                                 btn.appendChild(text);
                             };
-                            ul.appendChild(hr);
+                            ul.appendChild(br);
                         });
                         const cols = document.querySelectorAll(".reqBtn");
                         for (let i = 0; i < cols.length; i++) {
                             cols[i].addEventListener("click", sendReq);
-                        };
+                        };s
                     },
                     error: function(result){
                         const isSigned = result.responseJSON.errorMessage
@@ -96,13 +98,15 @@
                     xhr.setRequestHeader("Authorization", authToken);
                 },
                 success: function (result) {
-                    console.log(result);
                     alert('친구 요청이 완료되었습니다.')
                     $(`#${loginId}`).remove();
                 },
                 error: function(result){
-                    console.log(result);
                     alert(result.responseJSON.error);
+                    if(result.responseJSON.error = "이미 신청내역이 있습니다."){
+                        $(`#${loginId}`).html("요청 중");
+                        $(`#${loginId}`).attr("class", "reqBtn btn btn-light")
+                    };
                 }
             });
         };
@@ -142,35 +146,21 @@
 
     <hr>
 
-    <div id="roomlist">
+    <div id="roomlist"  style="width:600px; margin:auto;">
         <ul class="list-group">
             <li id="room1" class="list-group-item d-flex justify-content-between align-items-center">
-                <h4>room1</h4>
-                <!-- <span id="roomNum">1</span> -->
+                <h4>🗨room1</h4>
                 <span id="UserNum1" class="badge badge-primary badge-pill">1</span>
-                <!-- <button onclick="enter_room('1')">입장</button> -->
-                <button onclick="location.href='chatroom1'">입장</button>
+                <button onclick="location.href='chatroom1'" class="btn btn-outline-secondary">입장</button>               
             </li>
             <li  id="room2" class="list-group-item d-flex justify-content-between align-items-center">
-                <h4>room2</h4>
-                <!-- <span id="roomNum">2</span> -->
+                <h4>🗨room2</h4>
                 <span id="UserNum2" class="badge badge-primary badge-pill">2</span>
-                <button onclick="location.href='chatroom2'">입장</button>
+                <button onclick="location.href='chatroom2'" class="btn btn-outline-secondary">입장</button>               
             </li>
         </ul>
     </div>
-    <!-- <div id="chat">
-        <h5 id="roomId"></h5>
-            <p></p>
-        <h5 id="userCount"></h5>
-        <ul id="msglist">
-        </ul>
-        <input id="msg" placeholder="메세지를 입력하세요", required, type="text">
-        <button onclick="sendMessage()" id="sendMsg"> send </button>
-    </div> -->
-    
-    <hr>
-    <div id="users">
+    <div id="users" style="width:600px; margin:auto;">
     </div>  
 </body>
 </html>

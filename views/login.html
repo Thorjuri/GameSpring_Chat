@@ -1,4 +1,5 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script type="text/javascript">
     function login(){
         var param = {};
@@ -24,19 +25,25 @@
         };
 </script>
 
-<div style="width:420px;">
+<div style="width:420px; margin:100px auto;">
     <h1>Login</h1>
-    <div id="login" style="text-align:right;"></span><a href="signup">Signup</div>
+    <div style="text-align:right;">
+        <span><a href="signup">회원가입</a></span>
+    </div>
     <hr>
-    <div  id="loginout" style="display:none;">  
-        <span id="loginid"></span> <a href="/logout">로그아웃</a>
-    </div>
     <div>
-        <div>
-            <div >ID  : <input type="text" id="userid" name="userid" style="width:50%;"> </div>
-            <div>Password  : <input type="password" id="password"  name="password" style="width:50%;"> </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">ID</span>
+            </div>
+            <input type="text"  id="userid" name="userid" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
         </div>
-        <div></div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">PW</span>
+            </div>
+            <input type="password"  id="password"  name="password" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+        </div>
+        <button type="button" value="Login" onclick="login()"  class="btn btn-outline-secondary">로그인</button>               
     </div>
-    <div  style="margin-top:8px;text-align:right;"> <input type="button" value="Login" onclick="login();" /></div>
 </div>

@@ -24,28 +24,32 @@
                     },
                     success: function (result) {
                         const ul = document.querySelector("#request");
+                        ul.setAttribute("class", "card");
                         $("#friends").empty();
                         result.data.map((val, idx)=>{
                             if(val.confirm === false && val.valid === true){
                                 const { sender, createdAt, confirm, valid} = val
                                 const li = document.createElement("div");
-                                li.innerText = `신청인:${sender} / 신청일:${createdAt.slice(0,10)}`;
+                                li.setAttribute("class", "list-group list-group-flush" );
+                                const list = document.createElement("li");
+                                list.setAttribute("class", "list-group-item" );
+                                list.innerText = `📢 신청인: ${sender} / 신청일: ${createdAt.slice(0,10)}`;
                                 const accept_btn = document.createElement('button');
                                 const reject_btn = document.createElement('button');
-                                li.setAttribute("id", val.friendsId);
-                                accept_btn.setAttribute("class", "accept");
+                                list.setAttribute("id", val.friendsId);
+                                accept_btn.setAttribute("class", "accept btn btn-info");
                                 accept_btn.setAttribute("id", val.friendsId);
-                                reject_btn.setAttribute("class", "reject");
+                                accept_btn.setAttribute("style","margin-left: 50px; margin-right: 5px");
+                                reject_btn.setAttribute("class", "reject btn btn-secondary");
                                 reject_btn.setAttribute("id", val.friendsId);
-                                const hr = document.createElement('hr');
                                 const accept_text = document.createTextNode('수락');
                                 const reject_text = document.createTextNode('거절');
                                 ul.appendChild(li);
-                                ul.appendChild(accept_btn);
+                                li.appendChild(list)
+                                list.appendChild(accept_btn);
                                 accept_btn.appendChild(accept_text);
-                                ul.appendChild(reject_btn);
+                                list.appendChild(reject_btn);
                                 reject_btn.appendChild(reject_text);
-                                ul.appendChild(hr);
                             }
                         });
                         const accepts = document.querySelectorAll(".accept");
@@ -132,22 +136,25 @@
                     },
                     success: function (result) {
                         const ul = document.querySelector("#friends");
+                        ul.setAttribute("class", "card");
                         $("#users").empty();
                         result.result.map((val, idx)=>{
                             const li = document.createElement("div");
+                            li.setAttribute("class", "list-group list-group-flush" );
+                            const list = document.createElement("li");
                             const friendId = val.Id;
                             const createdAt = val.createdAt.slice(0,10);
-                            li.innerText = `User:${friendId} / 가입일:${createdAt}`;
-                            const hr = document.createElement('hr');
+                            list.innerText = ` 📢 User:${friendId} / 가입일:${createdAt}`;
                             ul.appendChild(li);
-                            li.setAttribute("class", friendId);
+                            li.appendChild(list)
+                            list.setAttribute("class", `${friendId} list-group-item`);
                             const btn = document.createElement('button');
                             btn.setAttribute("id", friendId);
-                            btn.setAttribute("class", "deleteBtn");
+                            btn.setAttribute("class", "deleteBtn btn btn-dark");
+                            btn.setAttribute("style","margin-left: 20px; margin-right: 5px");
                             let text = document.createTextNode('친구삭제');
-                            ul.appendChild(btn);
+                            list.appendChild(btn);
                             btn.appendChild(text);
-                            ul.appendChild(hr);
                         });
                         const deletes = document.querySelectorAll(".deleteBtn");
                         for (let i = 0; i < deletes.length; i++) {
@@ -233,8 +240,6 @@
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"></div>
         </div>
     </div>
-
-    <hr>
     <div id="request">
     </div>
     <div id="friends">
